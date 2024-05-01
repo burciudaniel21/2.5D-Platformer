@@ -29,6 +29,15 @@ public class ObjectMover : MonoBehaviour
         // Move the object using Lerp
         transform.position = Vector3.Lerp(startPoint.position, endPoint.position, fracJourney);
 
+        // Calculate the direction of movement
+        Vector3 direction = (endPoint.position - startPoint.position).normalized;
+
+        // Rotate the object to face the direction of movement
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+
         // If the object reaches the end point, restart the movement
         if (fracJourney >= 1.0f)
         {
