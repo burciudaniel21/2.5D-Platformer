@@ -747,6 +747,7 @@ GameObject:
   - component: {fileID: 4013167691067769016}
   - component: {fileID: 2343633655522405885}
   - component: {fileID: 5184521215083284740}
+  - component: {fileID: 4276361750682523329}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -822,7 +823,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 124
   m_CollisionDetection: 0
 --- !u!114 &5184521215083284740
 MonoBehaviour:
@@ -839,3 +840,28 @@ MonoBehaviour:
   pointA: {fileID: 0}
   pointB: {fileID: 0}
   speed: 2
+  delayTime: 3
+  chaseRadius: 5
+  attackRange: 1.3
+  shouldPatrol: 1
+--- !u!65 &4276361750682523329
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5308030492528055587}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.6580019, y: 1.2851295, z: 1}
+  m_Center: {x: -0.022800922, y: -0.14256477, z: 0}

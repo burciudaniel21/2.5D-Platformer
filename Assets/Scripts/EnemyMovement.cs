@@ -17,6 +17,8 @@ public class EnemyMovement : MonoBehaviour
     public float attackRange = 1.3f;
     private Transform player;
     private bool isChasing = false;
+    public bool shouldPatrol = true; // New variable for optional patrolling
+    private bool playerInRange;
 
     void Start()
     {
@@ -25,7 +27,7 @@ public class EnemyMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         if (pointA != null)
         {
-            currentPoint = pointA.transform;
+            currentPoint = rb.transform;
         }
     }
 
@@ -45,18 +47,31 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!isWaiting)
         {
-            animator.SetBool("isWalking", true);
-            Vector2 moveDirection = (currentPoint == pointA) ? Vector2.right : Vector2.left;
-            rb.velocity = moveDirection * speed;
-
-            Quaternion targetRotation = Quaternion.Euler(0, (currentPoint == pointA) ? 90 : -90, 0);
-            rb.rotation = Quaternion.Lerp(rb.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-
-            if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f)
+            // Check if the enemy is standing on the ground
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, Vector3.down, out hit))
             {
-                StartCoroutine(WaitAtEndPoint());
+                if (hit.collider.CompareTag("Ground"))
+                {
+                    animator.SetBool("isWalking", true);
+                    Vector2 moveDirection = (currentPoint == pointA) ? Vector2.right : Vector2.left;
+                    rb.velocity = moveDirection * speed;
+
+                    Quaternion targetRotation = Quaternion.Euler(0, (currentPoint == pointA) ? 90 : -90, 0);
+                    rb.rotation = Quaternion.Lerp(rb.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
+                    if (Vector2.Distance(transform.position, currentPoint.position) < 0.5f)
+                    {
+                        StartCoroutine(WaitAtEndPoint());
+                    }
+                    CheckForPlayer();
+                }
+                else
+                {
+                    // If not standing on a platform, stop movement
+                    rb.velocity = Vector2.zero;
+                }
             }
-            CheckForPlayer();
         }
         else
         {
@@ -72,6 +87,7 @@ public class EnemyMovement : MonoBehaviour
             }
         }
     }
+
 
     private void CheckForPlayer()
     {
@@ -110,9 +126,7 @@ public class EnemyMovement : MonoBehaviour
                 rb.velocity = Vector3.zero;
             }
         }
-
-        // Check if the player is within attack range
-        if (Vector3.Distance(transform.position, player.position) <= attackRange)
+        if (IsPlayerInAttackRange())
         {
             animator.SetBool("isAttacking", true);
             animator.SetBool("isWalking", false);
@@ -129,6 +143,28 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    private bool IsPlayerInChaseRange()
+    {
+        if (Vector3.Distance(transform.position, player.position) > chaseRadius)
+        { return true; } 
+        else { return false; }
+    }
+
+    private bool IsPlayerInAttackRange()
+    {
+
+        // Check if the player is within attack range
+        if (Vector3.Distance(transform.position, player.position) <= attackRange)
+        {
+
+            return true;
+        }
+        else
+        {
+            return false;
+
+        }
+    }
 
     IEnumerator WaitAtEndPoint()
     {
