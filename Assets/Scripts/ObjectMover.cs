@@ -8,6 +8,7 @@ public class ObjectMover : MonoBehaviour
 
     private float startTime;      // Time when the movement started
     private float journeyLength;  // Total distance between the start and end points
+    public bool faceTowardTarget;
 
     void Start()
     {
@@ -31,11 +32,13 @@ public class ObjectMover : MonoBehaviour
 
         // Calculate the direction of movement
         Vector3 direction = (endPoint.position - startPoint.position).normalized;
-
-        // Rotate the object to face the direction of movement
-        if (direction != Vector3.zero)
+        if (faceTowardTarget)
         {
-            transform.rotation = Quaternion.LookRotation(direction);
+            // Rotate the object to face the direction of movement
+            if (direction != Vector3.zero)
+            {
+                transform.rotation = Quaternion.LookRotation(direction);
+            }
         }
 
         // If the object reaches the end point, restart the movement
